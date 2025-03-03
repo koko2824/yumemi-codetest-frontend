@@ -6,9 +6,10 @@ import GraphTitle from '@/components/Graph/GraphTitle';
 import PopulationLineChart from '@/components/Graph/GraphLineChart';
 import { generateMockData, getLineColor } from '@/utils/populationUtils';
 import { PopulationData } from '@/models/PopulationData';
+import { Prefecure } from '@/models/prefecure';
 
 interface PopulationGraphProps {
-  selectedPrefectures: string[];
+  selectedPrefectures: Prefecure[];
 }
 
 export default function PopulationGraph({ selectedPrefectures }: PopulationGraphProps) {
@@ -22,7 +23,7 @@ export default function PopulationGraph({ selectedPrefectures }: PopulationGraph
       // Add population data for each selected prefecture
       selectedPrefectures.forEach((prefecture) => {
         // Generate random population data between 1-10 million
-        newYearData[prefecture] = Math.floor(Math.random() * 9000000) + 1000000;
+        newYearData[prefecture.prefName] = Math.floor(Math.random() * 9000000) + 1000000;
       });
 
       return newYearData;

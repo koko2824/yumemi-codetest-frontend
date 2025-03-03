@@ -1,4 +1,4 @@
-import { PrefecureData } from '@/models/prefecureData';
+import { Prefecure } from '@/models/prefecure';
 import { PopulationDataV2 } from '@/models/PopulationData';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || '';
@@ -23,7 +23,7 @@ export async function fetchFromApi<T>(endpoint: string): Promise<T> {
 
 interface prefecturesResponse {
   message: string | null;
-  result: PrefecureData[];
+  result: Prefecure[];
 }
 
 // 都道府県データの取得
