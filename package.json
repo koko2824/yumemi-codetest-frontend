@@ -7,20 +7,19 @@
     "build": "next build",
     "start": "next start",
     "lint": "run-p -l -c --aggregate-output lint:*",
-    "lint:eslint": "eslint './**/*.{js,jsx,ts,tsx,json,css}'",
-    "lint:prettier": "prettier --check './**/*.{js,jsx,ts,tsx,json,css}'",
+    "lint:eslint": "eslint './**/*.{ts,tsx}'",
+    "lint:prettier": "prettier --check './**/*.{ts,tsx}'",
     "fix": "run-s fix:prettier fix:eslint",
     "fix:eslint": "npm run lint:eslint -- --fix",
     "fix:prettier": "npm run lint:prettier -- --write",
     "prepare": "husky"
   },
   "lint-staged": {
-    "*.{ts,tsx}": "lint"
+      "*.{ts,tsx}": "npm-run-all -s lint:* -- {staged}"
   },
   "dependencies": {
     "next": "15.2.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react": "^19.0.0" 
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
