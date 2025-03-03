@@ -10,11 +10,11 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
-import { PopulationData } from '@/models/PopulationData';
+import { ChartData } from '@/models/PopulationData';
 import { Prefecure } from '@/models/prefecure';
 
 interface PopulationLineChartProps {
-  chartData: PopulationData[];
+  chartData: ChartData[];
   selectedPrefectures: Prefecure[];
   getLineColor: (index: number) => string;
 }
@@ -50,7 +50,7 @@ export default function PopulationLineChart({
             <Line
               key={prefecture.prefCode}
               type="monotone"
-              dataKey={prefecture.prefCode}
+              dataKey={prefecture.prefName}
               stroke={getLineColor(index)}
               activeDot={{ r: 8 }}
               name={prefecture.prefName}
