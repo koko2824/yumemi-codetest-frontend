@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import PrefectureSelector from '@/components/Selector';
+import PopulationGraph from '@/components/Graph';
 
 export default function Home() {
   const [selectedPrefectures, setSelectedPrefectures] = useState<string[]>([]);
@@ -22,6 +23,9 @@ export default function Home() {
           selectedPrefectures={selectedPrefectures}
           onPrefectureChange={handlePrefectureChange}
         />
+      </div>
+      <div className="mt-8">
+        <PopulationGraph selectedPrefectures={selectedPrefectures} />
       </div>
     </main>
   );
