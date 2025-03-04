@@ -5,6 +5,12 @@ import { fetchPopulationData } from '@/utils/api';
 import { PopulationLabel } from '@/models/PopulationData';
 
 jest.mock('@/utils/api');
+jest.mock('recharts', () => ({
+  ...jest.requireActual('recharts'),
+  ResponsiveContainer: ({ children }: { children: React.ReactNode }) => (
+    <div style={{ width: 800, height: 600 }}>{children}</div>
+  ),
+}));
 
 const mockFetchPopulationData = fetchPopulationData as jest.MockedFunction<
   typeof fetchPopulationData
