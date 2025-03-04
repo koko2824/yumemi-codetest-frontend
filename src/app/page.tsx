@@ -11,6 +11,7 @@ export default function Home() {
   const [allPrefectures, setAllPrefectures] = useState<Prefecture[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [requestedPrefectures, setRequestedPrefectures] = useState<Set<number>>(new Set());
 
   useEffect(() => {
     const loadPrefectures = async () => {
@@ -28,6 +29,7 @@ export default function Home() {
 
     loadPrefectures();
   }, []);
+
   const handlePrefectureChange = (prefecture: Prefecture, isChecked: boolean) => {
     if (isChecked) {
       setSelectedPrefectures((prev) => [...prev, prefecture]);
@@ -75,7 +77,11 @@ export default function Home() {
         />
       </div>
       <div className="mt-8">
-        <PopulationGraph selectedPrefectures={selectedPrefectures} />
+        <PopulationGraph
+          selectedPrefectures={selectedPrefectures}
+          requestedPrefectures={requestedPrefectures}
+          setRequestedPrefectures={setRequestedPrefectures}
+        />
       </div>
     </main>
   );
