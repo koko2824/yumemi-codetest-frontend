@@ -1,10 +1,10 @@
 import React from 'react';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import PopulationGraph from './index';
-import { fetchPopulationData } from '@/utils/api';
+import { fetchPopulationData } from '@/utils/apiUtils';
 import { PopulationLabel } from '@/models/PopulationData';
 
-jest.mock('@/utils/api');
+jest.mock('@/utils/apiUtils');
 jest.mock('recharts', () => ({
   ...jest.requireActual('recharts'),
   ResponsiveContainer: ({ children }: { children: React.ReactNode }) => (

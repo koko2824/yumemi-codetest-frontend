@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import PrefectureSelector from '@/components/Selector';
 import PopulationGraph from '@/components/Graph';
-import { fetchPrefectures } from '@/utils/api';
+import { fetchPrefectures } from '@/utils/apiUtils';
 import { Prefecture } from '@/models/prefecture';
 
 export default function Home() {

@@ -3,7 +3,7 @@
 import { useRef, useCallback } from 'react';
 import { ChartData, PopulationResponse } from '@/models/PopulationData';
 import { Prefecture } from '@/models/prefecture';
-import { fetchPopulationData } from '@/utils/api';
+import { fetchPopulationData } from '@/utils/apiUtils';
 import { formatPopulationData } from '@/utils/populationUtils';
 
 interface CacheData {
