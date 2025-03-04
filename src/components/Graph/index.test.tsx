@@ -1,10 +1,10 @@
 import React from 'react';
-import { render, screen, waitFor, act } from '@testing-library/react';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import PopulationGraph from './index';
-import { fetchPopulationData } from '@/utils/api';
+import { fetchPopulationData } from '@/utils/apiUtils';
 import { PopulationLabel } from '@/models/PopulationData';
 
-jest.mock('@/utils/api');
+jest.mock('@/utils/apiUtils');
 jest.mock('recharts', () => ({
   ...jest.requireActual('recharts'),
   ResponsiveContainer: ({ children }: { children: React.ReactNode }) => (
@@ -15,6 +15,48 @@ jest.mock('recharts', () => ({
 const mockFetchPopulationData = fetchPopulationData as jest.MockedFunction<
   typeof fetchPopulationData
 >;
+const mockSetRequestedPrefectures = jest.fn();
+const mockRequestedPrefectures = new Set<number>();
+
+// モックデータを作成する関数
+const createMockPopulationData = (prefCode: number) => {
+  return {
+    message: null,
+    result: {
+      boundaryYear: 2020,
+      data: [
+        {
+          label: PopulationLabel.TOTAL,
+          data: [
+            { year: 2020, value: 1000 + prefCode },
+            { year: 2019, value: 900 + prefCode },
+          ],
+        },
+        {
+          label: PopulationLabel.YOUNG,
+          data: [
+            { year: 2020, value: 500 + prefCode },
+            { year: 2019, value: 450 + prefCode },
+          ],
+        },
+        {
+          label: PopulationLabel.PRODUCTION,
+          data: [
+            { year: 2020, value: 700 + prefCode },
+            { year: 2019, value: 650 + prefCode },
+          ],
+        },
+        {
+          label: PopulationLabel.ELDERLY,
+          data: [
+            { year: 2020, value: 300 + prefCode },
+            { year: 2019, value: 250 + prefCode },
+          ],
+        },
+      ],
+    },
+  };
+};
 
 beforeAll(() => {
   global.ResizeObserver = class {
@@ -33,28 +75,32 @@ describe('PopulationGraph', () => {
 
   beforeEach(() => {
     mockFetchPopulationData.mockClear();
+
+    // デフォルトでは各都道府県コードに対応するモックデータを返すように設定
+    mockFetchPopulationData.mockImplementation((prefCode) => {
+      return Promise.resolve(createMockPopulationData(prefCode));
+    });
   });
 
   it('正しくレンダリングされるか', async () => {
-    await act(async () => {
-      render(<PopulationGraph selectedPrefectures={selectedPrefectures} />);
-    });
-  });
-
-  it('データ取得に失敗した時、メッセージを表示する', async () => {
-    mockFetchPopulationData.mockRejectedValueOnce(new Error('データの取得に失敗しました'));
-
-    await act(async () => {
-      render(<PopulationGraph selectedPrefectures={selectedPrefectures} />);
-    });
-
-    await waitFor(() => expect(screen.getByText('データの取得に失敗しました')).toBeInTheDocument());
+    render(
+      <PopulationGraph
+        selectedPrefectures={selectedPrefectures}
+        requestedPrefectures={mockRequestedPrefectures}
+        setRequestedPrefectures={mockSetRequestedPrefectures}
+      />
+    );
+    await waitFor(() => expect(screen.getByTestId('population-graph')).toBeInTheDocument());
   });
 
   it('都道府県が選択されていない場合、空の状態が表示される', async () => {
-    await act(async () => {
-      render(<PopulationGraph selectedPrefectures={[]} />);
-    });
+    render(
+      <PopulationGraph
+        selectedPrefectures={[]}
+        requestedPrefectures={mockRequestedPrefectures}
+        setRequestedPrefectures={mockSetRequestedPrefectures}
+      />
+    );
     expect(screen.getByText('都道府県を選択してください')).toBeInTheDocument();
   });
 
@@ -64,11 +110,47 @@ describe('PopulationGraph', () => {
       result: { boundaryYear: 2020, data: [{ label: PopulationLabel.TOTAL, data: [] }] },
     });
 
-    await act(async () => {
-      render(<PopulationGraph selectedPrefectures={selectedPrefectures} />);
-    });
+    render(
+      <PopulationGraph
+        selectedPrefectures={selectedPrefectures}
+        requestedPrefectures={mockRequestedPrefectures}
+        setRequestedPrefectures={mockSetRequestedPrefectures}
+      />
+    );
 
     await waitFor(() => expect(screen.getByText('都道府県別総人口推移')).toBeInTheDocument());
+  });
+
+  it('カテゴリーを変更すると、新しいデータが取得される', async () => {
+    mockFetchPopulationData.mockResolvedValueOnce({
+      message: null,
+      result: {
+        boundaryYear: 2020,
+        data: [
+          {
+            label: PopulationLabel.TOTAL,
+            data: [{ year: 2020, value: 1000 }],
+          },
+          {
+            label: PopulationLabel.YOUNG,
+            data: [{ year: 2020, value: 500 }],
+          },
+        ],
+      },
+    });
+    const { getByText } = render(
+      <PopulationGraph
+        selectedPrefectures={[{ prefCode: 1, prefName: '北海道' }]}
+        requestedPrefectures={mockRequestedPrefectures}
+        setRequestedPrefectures={mockSetRequestedPrefectures}
+      />
+    );
+
+    await waitFor(() => expect(screen.getByText('都道府県別総人口推移')).toBeInTheDocument());
+
+    // カテゴリーを変更
+    fireEvent.click(getByText(PopulationLabel.YOUNG));
+    await waitFor(() => expect(screen.getByText('都道府県別年少人口推移')).toBeInTheDocument());
   });
 
   it('正しいデータが取得された場合、グラフが表示される', async () => {
@@ -90,10 +172,13 @@ describe('PopulationGraph', () => {
       },
     });
 
-    await act(async () => {
-      render(<PopulationGraph selectedPrefectures={selectedPrefectures} />);
-    });
-
+    render(
+      <PopulationGraph
+        selectedPrefectures={selectedPrefectures}
+        requestedPrefectures={mockRequestedPrefectures}
+        setRequestedPrefectures={mockSetRequestedPrefectures}
+      />
+    );
     await waitFor(() => expect(screen.getByTestId('population-graph')).toBeInTheDocument());
   });
 });

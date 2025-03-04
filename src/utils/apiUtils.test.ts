@@ -1,4 +1,4 @@
-import { fetchFromApi, fetchPrefectures, fetchPopulationData } from './index';
+import { fetchFromApi, fetchPrefectures, fetchPopulationData } from './apiUtils';
 import { PrefecturesResponse } from '@/models/prefecture';
 import { PopulationResponse } from '@/models/PopulationData';
 
