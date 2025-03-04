@@ -4,11 +4,11 @@ import { useEffect, useState } from 'react';
 import PrefectureSelector from '@/components/Selector';
 import PopulationGraph from '@/components/Graph';
 import { fetchPrefectures } from '@/utils/api';
-import { Prefecure } from '@/models/prefecure';
+import { Prefecture } from '@/models/prefecture';
 
 export default function Home() {
-  const [selectedPrefectures, setSelectedPrefectures] = useState<Prefecure[]>([]);
-  const [allPrefectures, setAllPrefectures] = useState<Prefecure[]>([]);
+  const [selectedPrefectures, setSelectedPrefectures] = useState<Prefecture[]>([]);
+  const [allPrefectures, setAllPrefectures] = useState<Prefecture[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -28,7 +28,7 @@ export default function Home() {
 
     loadPrefectures();
   }, []);
-  const handlePrefectureChange = (prefecture: Prefecure, isChecked: boolean) => {
+  const handlePrefectureChange = (prefecture: Prefecture, isChecked: boolean) => {
     if (isChecked) {
       setSelectedPrefectures((prev) => [...prev, prefecture]);
     } else {

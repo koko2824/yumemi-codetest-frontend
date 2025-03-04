@@ -1,12 +1,12 @@
 'use client';
 
 import Checkbox from '@/components/Selector/Checkbox';
-import { Prefecure } from '@/models/prefecure';
+import { Prefecture } from '@/models/prefecture';
 
 interface PrefectureSelectorProps {
-  selectedPrefectures: Prefecure[];
-  onPrefectureChange: (prefecture: Prefecure, isChecked: boolean) => void;
-  allPrefectures: Prefecure[];
+  selectedPrefectures: Prefecture[];
+  onPrefectureChange: (prefecture: Prefecture, isChecked: boolean) => void;
+  allPrefectures: Prefecture[];
 }
 
 export default function PrefectureSelector({
