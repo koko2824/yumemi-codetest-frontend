@@ -1,6 +1,8 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import PopulationLineChart from './GraphLineChart';
+import { ChartData } from '@/models/PopulationData';
+import { Prefecture } from '@/models/prefecture';
 
 class ResizeObserver {
   observe() {}
@@ -9,9 +11,6 @@ class ResizeObserver {
 }
 
 global.ResizeObserver = ResizeObserver;
-import { ChartData } from '@/models/PopulationData';
-import { Prefecture } from '@/models/prefecture';
-
 const mockChartData: ChartData[] = [
   { year: 2000, population: 1000 },
   { year: 2005, population: 1500 },
@@ -40,14 +39,21 @@ export const mockGetLineColor = (index: number) => {
   return colors[index % colors.length];
 };
 
+jest.mock('recharts', () => ({
+  ...jest.requireActual('recharts'),
+  ResponsiveContainer: ({ children }: { children: React.ReactNode }) => (
+    <div style={{ width: 800, height: 600 }}>{children}</div>
+  ),
+}));
+
 describe('PopulationLineChart コンポーネント', () => {
   it('正しくレンダリングされているか', () => {
     const { container } = render(
-        <PopulationLineChart
-            chartData={mockChartData}
-            selectedPrefectures={mockSelectedPrefectures}
-            getLineColor={mockGetLineColor}
-        />
+      <PopulationLineChart
+        chartData={mockChartData}
+        selectedPrefectures={mockSelectedPrefectures}
+        getLineColor={mockGetLineColor}
+      />
     );
     expect(container).toBeInTheDocument();
   });
