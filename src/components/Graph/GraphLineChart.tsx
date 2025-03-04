@@ -11,11 +11,11 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import { ChartData } from '@/models/PopulationData';
-import { Prefecure } from '@/models/prefecure';
+import { Prefecture } from '@/models/prefecture';
 
 interface PopulationLineChartProps {
   chartData: ChartData[];
-  selectedPrefectures: Prefecure[];
+  selectedPrefectures: Prefecture[];
   getLineColor: (index: number) => string;
 }
 

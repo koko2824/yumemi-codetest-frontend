@@ -7,11 +7,11 @@ import CategorySelector from '@/components/Graph/CategorySelector';
 import PopulationLineChart from '@/components/Graph/GraphLineChart';
 import { formatPopulationData, getLineColor, mergePopulationData } from '@/utils/populationUtils';
 import { ChartData, PopulationLabel, PopulationResponse } from '@/models/PopulationData';
-import { Prefecure } from '@/models/prefecure';
+import { Prefecture } from '@/models/prefecture';
 import { fetchPopulationData } from '@/utils/api';
 
 interface PopulationGraphProps {
-  selectedPrefectures: Prefecure[];
+  selectedPrefectures: Prefecture[];
 }
 
 export default function PopulationGraph({ selectedPrefectures }: PopulationGraphProps) {
@@ -75,7 +75,7 @@ export default function PopulationGraph({ selectedPrefectures }: PopulationGraph
   }
 
   return (
-    <div>
+    <div data-testid="population-graph">
       <CategorySelector
         selectedCategory={selectedCategory}
         onCategoryChange={handleCategoryChange}
@@ -86,7 +86,7 @@ export default function PopulationGraph({ selectedPrefectures }: PopulationGraph
 
         {isLoading ? (
           <div className="h-[400px] flex items-center justify-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500" role="status"></div>
           </div>
         ) : error ? (
           <EmptyState message={error} />

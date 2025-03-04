@@ -1,4 +1,4 @@
-import { PrefecturesResponse } from '@/models/prefecure';
+import { PrefecturesResponse } from '@/models/prefecture';
 import { PopulationResponse } from '@/models/PopulationData';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || '';
