@@ -7,7 +7,7 @@ describe('GraphTitle', () => {
     render(<GraphTitle title="Sample Title" />);
   });
 
-  // 
+  //
   it('正しいタイトルを表示しているか', () => {
     const { getByText } = render(<GraphTitle title="Sample Title" />);
     expect(getByText('Sample Title')).toBeInTheDocument();

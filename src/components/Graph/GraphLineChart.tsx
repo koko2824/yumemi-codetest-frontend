@@ -25,7 +25,7 @@ export default function PopulationLineChart({
   getLineColor,
 }: PopulationLineChartProps) {
   return (
-    <div className="h-[400px] w-full">
+    <div className="h-[400px] w-full" style={{ minWidth: '300px', minHeight: '400px' }}>
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" />

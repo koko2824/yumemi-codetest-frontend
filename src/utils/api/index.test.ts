@@ -2,7 +2,6 @@ import { fetchFromApi, fetchPrefectures, fetchPopulationData } from './index';
 import { PrefecturesResponse } from '@/models/prefecture';
 import { PopulationResponse } from '@/models/PopulationData';
 
-
 global.fetch = jest.fn();
 
 describe('API utility functions', () => {
@@ -60,7 +59,6 @@ describe('API utility functions', () => {
       });
     });
 
-
     // レスポンスが正常でない時はエラーを返す
     it('レスポンスが正常でない時はエラーを返す', async () => {
       (fetch as jest.Mock).mockResolvedValueOnce({
@@ -75,7 +73,10 @@ describe('API utility functions', () => {
 
   describe('fetchPopulationData 関数', () => {
     it('データを取得する', async () => {
-      const mockData: PopulationResponse = { message: null, result: { boundaryYear: 2020, data: [] } };
+      const mockData: PopulationResponse = {
+        message: null,
+        result: { boundaryYear: 2020, data: [] },
+      };
       (fetch as jest.Mock).mockResolvedValueOnce({
         ok: true,
         json: jest.fn().mockResolvedValueOnce(mockData),
@@ -84,9 +85,12 @@ describe('API utility functions', () => {
       const prefCode = 1;
       const result = await fetchPopulationData(prefCode);
       expect(result).toEqual(mockData);
-      expect(fetch).toHaveBeenCalledWith(`${API_BASE_URL}/population/composition/perYear?prefCode=${prefCode}`, {
-        headers: new Headers({ 'X-API-KEY': API_KEY }),
-      });
+      expect(fetch).toHaveBeenCalledWith(
+        `${API_BASE_URL}/population/composition/perYear?prefCode=${prefCode}`,
+        {
+          headers: new Headers({ 'X-API-KEY': API_KEY }),
+        }
+      );
     });
 
     it('レスポンスが正常でない時はエラーを返す', async () => {

@@ -6,7 +6,9 @@ import { PopulationLabel } from '@/models/PopulationData';
 
 jest.mock('@/utils/api');
 
-const mockFetchPopulationData = fetchPopulationData as jest.MockedFunction<typeof fetchPopulationData>;
+const mockFetchPopulationData = fetchPopulationData as jest.MockedFunction<
+  typeof fetchPopulationData
+>;
 
 beforeAll(() => {
   global.ResizeObserver = class {
@@ -23,7 +25,6 @@ describe('PopulationGraph', () => {
     { prefCode: 47, prefName: '沖縄県' },
   ];
 
-
   beforeEach(() => {
     mockFetchPopulationData.mockClear();
   });
@@ -31,7 +32,6 @@ describe('PopulationGraph', () => {
   it('正しくレンダリングされるか', () => {
     render(<PopulationGraph selectedPrefectures={selectedPrefectures} />);
   });
-
 
   it('ロード中にスピナーを表示する', async () => {
     mockFetchPopulationData.mockResolvedValueOnce({
@@ -64,28 +64,26 @@ describe('PopulationGraph', () => {
     await waitFor(() => expect(screen.getByText('都道府県別総人口推移')).toBeInTheDocument());
   });
 
-    it('正しいデータが取得された場合、グラフが表示される', async () => {
-            const selectedPrefectures = [
-                { prefCode: 1, prefName: '北海道' },
-            ];
-    
-            mockFetchPopulationData.mockResolvedValueOnce({
-                message: null,
-                result: {
-                boundaryYear: 2020,
-                data: [
-                    {
-                    label: PopulationLabel.TOTAL,
-                    data: [
-                        { year: 2020, value: 1000 },
-                        { year: 2019, value: 900 },
-                    ],
-                    },
-                ],
-                },
-            });
-        
-            render(<PopulationGraph selectedPrefectures={selectedPrefectures} />);
-            await waitFor(() => expect(screen.getByTestId('population-graph')).toBeInTheDocument());
-        });
+  it('正しいデータが取得された場合、グラフが表示される', async () => {
+    const selectedPrefectures = [{ prefCode: 1, prefName: '北海道' }];
+
+    mockFetchPopulationData.mockResolvedValueOnce({
+      message: null,
+      result: {
+        boundaryYear: 2020,
+        data: [
+          {
+            label: PopulationLabel.TOTAL,
+            data: [
+              { year: 2020, value: 1000 },
+              { year: 2019, value: 900 },
+            ],
+          },
+        ],
+      },
+    });
+
+    render(<PopulationGraph selectedPrefectures={selectedPrefectures} />);
+    await waitFor(() => expect(screen.getByTestId('population-graph')).toBeInTheDocument());
+  });
 });
