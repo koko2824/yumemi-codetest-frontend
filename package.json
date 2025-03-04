@@ -17,7 +17,7 @@
     "test:watch": "jest --watch"
   },
   "lint-staged": {
-    "*.{ts,tsx}": "npm-run-all -s lint:* -- {staged}"
+    "*.{ts,tsx}": "npm-run-all -s lint:* -- {staged} fix:* -- {staged}"
   },
   "dependencies": {
     "next": "15.2.0",
