@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, act } from '@testing-library/react';
 import PopulationGraph from './index';
 import { fetchPopulationData } from '@/utils/api';
 import { PopulationLabel } from '@/models/PopulationData';
@@ -29,8 +29,10 @@ describe('PopulationGraph', () => {
     mockFetchPopulationData.mockClear();
   });
 
-  it('正しくレンダリングされるか', () => {
-    render(<PopulationGraph selectedPrefectures={selectedPrefectures} />);
+  it('正しくレンダリングされるか', async () => {
+    await act(async () => {
+      render(<PopulationGraph selectedPrefectures={selectedPrefectures} />);
+    });
   });
 
   it('ロード中にスピナーを表示する', async () => {
@@ -38,19 +40,30 @@ describe('PopulationGraph', () => {
       message: null,
       result: { boundaryYear: 2020, data: [{ label: PopulationLabel.TOTAL, data: [] }] },
     });
-    render(<PopulationGraph selectedPrefectures={selectedPrefectures} />);
+
+    await act(async () => {
+      render(<PopulationGraph selectedPrefectures={selectedPrefectures} />);
+    });
+
     expect(screen.getByRole('status')).toBeInTheDocument();
+
+    await waitFor(() => expect(screen.queryByRole('status')).not.toBeInTheDocument());
   });
 
   it('データ取得に失敗した時、メッセージを表示する', async () => {
     mockFetchPopulationData.mockRejectedValueOnce(new Error('データの取得に失敗しました'));
 
-    render(<PopulationGraph selectedPrefectures={selectedPrefectures} />);
+    await act(async () => {
+      render(<PopulationGraph selectedPrefectures={selectedPrefectures} />);
+    });
+
     await waitFor(() => expect(screen.getByText('データの取得に失敗しました')).toBeInTheDocument());
   });
 
-  it('都道府県が選択されていない場合、空の状態が表示される', () => {
-    render(<PopulationGraph selectedPrefectures={[]} />);
+  it('都道府県が選択されていない場合、空の状態が表示される', async () => {
+    await act(async () => {
+      render(<PopulationGraph selectedPrefectures={[]} />);
+    });
     expect(screen.getByText('都道府県を選択してください')).toBeInTheDocument();
   });
 
@@ -60,7 +73,10 @@ describe('PopulationGraph', () => {
       result: { boundaryYear: 2020, data: [{ label: PopulationLabel.TOTAL, data: [] }] },
     });
 
-    render(<PopulationGraph selectedPrefectures={selectedPrefectures} />);
+    await act(async () => {
+      render(<PopulationGraph selectedPrefectures={selectedPrefectures} />);
+    });
+
     await waitFor(() => expect(screen.getByText('都道府県別総人口推移')).toBeInTheDocument());
   });
 
@@ -83,7 +99,10 @@ describe('PopulationGraph', () => {
       },
     });
 
-    render(<PopulationGraph selectedPrefectures={selectedPrefectures} />);
+    await act(async () => {
+      render(<PopulationGraph selectedPrefectures={selectedPrefectures} />);
+    });
+
     await waitFor(() => expect(screen.getByTestId('population-graph')).toBeInTheDocument());
   });
 });
