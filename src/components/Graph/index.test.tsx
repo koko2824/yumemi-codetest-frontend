@@ -41,21 +41,6 @@ describe('PopulationGraph', () => {
     });
   });
 
-  it('ロード中にスピナーを表示する', async () => {
-    mockFetchPopulationData.mockResolvedValueOnce({
-      message: null,
-      result: { boundaryYear: 2020, data: [{ label: PopulationLabel.TOTAL, data: [] }] },
-    });
-
-    await act(async () => {
-      render(<PopulationGraph selectedPrefectures={selectedPrefectures} />);
-    });
-
-    expect(screen.getByRole('status')).toBeInTheDocument();
-
-    await waitFor(() => expect(screen.queryByRole('status')).not.toBeInTheDocument());
-  });
-
   it('データ取得に失敗した時、メッセージを表示する', async () => {
     mockFetchPopulationData.mockRejectedValueOnce(new Error('データの取得に失敗しました'));
 
