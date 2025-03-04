@@ -1,9 +1,9 @@
 import { renderHook, act } from '@testing-library/react';
 import { usePopulationDataCache } from './usePopulationDataCache';
-import { fetchPopulationData } from '@/utils/api';
+import { fetchPopulationData } from '@/utils/apiUtils';
 import { PopulationLabel } from '@/models/PopulationData';
 
-jest.mock('@/utils/api');
+jest.mock('@/utils/apiUtils');
 const mockFetchPopulationData = fetchPopulationData as jest.MockedFunction<
   typeof fetchPopulationData
 >;
